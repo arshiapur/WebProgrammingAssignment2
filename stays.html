@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Stays</title>
+  <link rel="stylesheet" href="mystyle.css">
+</head>
+<body onload="A2.startDateTime(); A2.initControls();">
+<header>
+  <div class="brand">Travel Deals</div>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="stays.html">Stays</a>
+    <a href="flights.html">Flights</a>
+    <a href="cars.html">Cars</a>
+    <a href="cruises.html">Cruises</a>
+    <a href="contact.html">Contact Us</a>
+  </nav>
+</header>
+
+<div class="container">
+  <div class="controls">
+    <label>Current local date/time: <span id="localDateTime"></span></label>
+    <label style="margin-left:auto;">Font size:
+      <select id="fontSizeSelect"><option>16</option><option>18</option></select>
+    </label>
+    <label>Background:
+      <select id="bgColorSelect"><option value="#ffffff">White</option></select>
+    </label>
+  </div>
+
+  <h2>Find Stays</h2>
+
+  <form id="staysForm" novalidate>
+    <div class="form-row">
+      <input id="city" type="text" placeholder="City (TX or CA)">
+      <label>Check-in: <input id="checkin" type="date"></label>
+      <label>Check-out: <input id="checkout" type="date"></label>
+    </div>
+
+    <div class="form-row">
+      <label>Adults: <input id="sAdults" type="number" min="0" value="1"></label>
+      <label>Children: <input id="sChildren" type="number" min="0" value="0"></label>
+      <label>Infants: <input id="sInfants" type="number" min="0" value="0"></label>
+    </div>
+
+    <button type="button" id="searchStays">Search</button>
+    <div id="staysErrors"></div>
+    <div id="staysResult"></div>
+  </form>
+</div>
+
+<script>
+
+document.getElementById('searchStays').addEventListener('click', ()=>{
+  const city = document.getElementById('city').value.trim();
+  const checkin = document.getElementById('checkin').value;
+  const checkout = document.getElementById('checkout').value;
+  const adults = Number(document.getElementById('sAdults').value) || 0;
+  const children = Number(document.getElementById('sChildren').value) || 0;
+  const infants = Number(document.getElementById('sInfants').value) || 0;
+
+  const errors = [];
+
+  if(!A2.inDateRange(checkin, '2024-09-01', '2024-12-01')) errors.push('Check-in must be between Sep 1, 2024 and Dec 1, 2024.');
+  if(!A2.inDateRange(checkout, '2024-09-01', '2024-12-01')) errors.push('Check-out must be between Sep 1, 2024 and Dec 1, 2024.');
+
+  const d1 = A2.parseYMD(checkin), d2 = A2.parseYMD(checkout);
+  if(d1 && d2 && d2.getTime() <= d1.getTime()) errors.push('Check-out must be after check-in.');
+
+  if(!A2.isAllowedCity(city)) errors.push('City must be a city in Texas or California.');
+
+
+  const nonInfantGuests = adults + children;
+  const roomsNeeded = Math.ceil(nonInfantGuests / 2) || 0; 
+
+  if(nonInfantGuests > roomsNeeded * 2) {
+
+    errors.push('Too many guests for available rooms.');
+  }
+
+  if(adults > 2*roomsNeeded) errors.push('Adults exceed per-room capacity.');
+  if(children > 2*roomsNeeded) errors.push('Children exceed per-room capacity.');
+
+
+  const errDiv = document.getElementById('staysErrors');
+  const resDiv = document.getElementById('staysResult');
+  errDiv.innerHTML=''; resDiv.innerHTML='';
+  if(errors.length){ A2.showErrors(errDiv, errors); return; }
+
+  const html = `<strong>Stays search</strong><br>
+    City: ${city}<br>
+    Check-in: ${checkin}<br>
+    Check-out: ${checkout}<br>
+    Guests: ${adults} adults, ${children} children, ${infants} infants<br>
+    Rooms needed (excluding infants): ${roomsNeeded}`;
+  A2.showResult(resDiv, html);
+});
+</script>
+</body>
+</html>

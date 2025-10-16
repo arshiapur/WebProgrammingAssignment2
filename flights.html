@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Flights</title>
+  <link rel="stylesheet" href="mystyle.css">
+</head>
+<body onload="A2.startDateTime(); A2.initControls();">
+<header>
+  <div class="brand">Travel Deals</div>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="stays.html">Stays</a>
+    <a href="flights.html">Flights</a>
+    <a href="cars.html">Cars</a>
+    <a href="cruises.html">Cruises</a>
+    <a href="contact.html">Contact Us</a>
+  </nav>
+</header>
+
+<div class="container">
+  <div class="controls">
+    <label>Current local date/time: <span id="localDateTime"></span></label>
+    <label style="margin-left:auto;">Font size:
+      <select id="fontSizeSelect"><option>16</option><option>18</option></select>
+    </label>
+    <label>Background:
+      <select id="bgColorSelect"><option value="#ffffff">White</option></select>
+    </label>
+  </div>
+
+  <h2>Book a Flight</h2>
+
+  <form id="flightForm" novalidate>
+    <div>
+      <label><input type="radio" name="tripType" value="oneway" checked>One-way</label>
+      <label><input type="radio" name="tripType" value="roundtrip">Round-trip</label>
+    </div>
+
+    <div class="form-row">
+      <input id="origin" type="text" placeholder="Origin city (e.g., Austin)">
+      <input id="destination" type="text" placeholder="Destination city">
+    </div>
+
+    <div class="form-row">
+      <label>Departure date: <input id="departDate" type="date"></label>
+      <label id="returnLabel" class="hidden">Return date: <input id="returnDate" type="date"></label>
+    </div>
+
+    <div class="form-row">
+      <span class="passenger-icon" id="passengerIcon">👥 Passengers</span>
+      <div id="passengerForm" class="hidden" style="margin-left:10px;">
+        <label>Adults: <input id="adults" type="number" min="0" value="1"></label>
+        <label>Children: <input id="children" type="number" min="0" value="0"></label>
+        <label>Infants: <input id="infants" type="number" min="0" value="0"></label>
+      </div>
+    </div>
+
+    <button type="button" id="searchFlights">Search</button>
+    <div id="flightErrors"></div>
+    <div id="flightResult"></div>
+  </form>
+</div>
+
+<script>
+
+(function(){
+  const tripInputs = document.getElementsByName('tripType');
+  const returnLabel = document.getElementById('returnLabel');
+  function updateTrip(){
+    const val = Array.from(tripInputs).find(r=>r.checked).value;
+    if(val === 'roundtrip') returnLabel.classList.remove('hidden');
+    else returnLabel.classList.add('hidden');
+  }
+  Array.from(tripInputs).forEach(r=>r.addEventListener('change', updateTrip));
+  updateTrip();
+
+  document.getElementById('passengerIcon').addEventListener('click', ()=>{
+    const pf = document.getElementById('passengerForm');
+    pf.classList.toggle('hidden');
+  });
+
+  document.getElementById('searchFlights').addEventListener('click', ()=>{
+    const origin = document.getElementById('origin').value.trim();
+    const dest = document.getElementById('destination').value.trim();
+    const depart = document.getElementById('departDate').value;
+    const ret = document.getElementById('returnDate').value;
+    const tripType = Array.from(tripInputs).find(r=>r.checked).value;
+    const adults = Number(document.getElementById('adults').value) || 0;
+    const children = Number(document.getElementById('children').value) || 0;
+    const infants = Number(document.getElementById('infants').value) || 0;
+
+    const errors = [];
+
+    if(!A2.inDateRange(depart, '2024-09-01', '2024-12-01')) errors.push('Departure date must be between Sep 1, 2024 and Dec 1, 2024.');
+    if(tripType === 'roundtrip'){
+      if(!A2.inDateRange(ret, '2024-09-01', '2024-12-01')) errors.push('Return date must be between Sep 1, 2024 and Dec 1, 2024.');
+
+      const d1 = A2.parseYMD(depart), d2 = A2.parseYMD(ret);
+      if(d1 && d2 && d2.getTime() < d1.getTime()) errors.push('Return date cannot be before departure date.');
+    }
+
+    if(!A2.isAllowedCity(origin)) errors.push('Origin must be a city in Texas or California (e.g., Austin, Dallas, Los Angeles, San Francisco).');
+    if(!A2.isAllowedCity(dest)) errors.push('Destination must be a city in Texas or California.');
+
+    if(adults > 4) errors.push('Adults cannot exceed 4.');
+    if(children > 4) errors.push('Children cannot exceed 4.');
+    if(infants > 4) errors.push('Infants cannot exceed 4.');
+    const errDiv = document.getElementById('flightErrors');
+    const resDiv = document.getElementById('flightResult');
+    errDiv.innerHTML=''; resDiv.innerHTML='';
+    if(errors.length){ A2.showErrors(errDiv, errors); return; }
+
+    const html = `<strong>Search parameters</strong><br>
+      Trip type: ${tripType}<br>
+      Origin: ${origin}<br>
+      Destination: ${dest}<br>
+      Departure: ${depart}<br>
+      ${tripType === 'roundtrip' ? ('Return: '+ret+'<br>') : ''}
+      Passengers: ${adults} adults, ${children} children, ${infants} infants`;
+    A2.showResult(resDiv, html);
+  });
+})();
+</script>
+</body>
+</html>

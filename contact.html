@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Contact Us</title>
+  <link rel="stylesheet" href="mystyle.css">
+</head>
+<body onload="A2.startDateTime(); A2.initControls();">
+<header>
+  <div class="brand">Travel Deals</div>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="stays.html">Stays</a>
+    <a href="flights.html">Flights</a>
+    <a href="cars.html">Cars</a>
+    <a href="cruises.html">Cruises</a>
+    <a href="contact.html">Contact Us</a>
+  </nav>
+</header>
+
+<div class="container">
+  <div class="controls">
+    <label>Current local date/time: <span id="localDateTime"></span></label>
+    <label style="margin-left:auto;">Font size:
+      <select id="fontSizeSelect"><option>16</option><option>18</option><option>20</option></select>
+    </label>
+    <label>Background:
+      <select id="bgColorSelect"><option value="#ffffff">White</option><option value="#f4f9ff">Light blue</option></select>
+    </label>
+  </div>
+
+  <h2>Contact Us</h2>
+  <form id="contactForm" novalidate>
+    <div class="form-row">
+      <input id="firstName" type="text" placeholder="First name">
+      <input id="lastName" type="text" placeholder="Last name">
+    </div>
+
+    <div class="form-row">
+      <input id="phone" type="tel" placeholder="Phone (ddd) ddd-dddd">
+      <input id="email" type="email" placeholder="Email">
+    </div>
+
+    <div class="form-row">
+      <label class="small">Gender:
+        <input type="radio" name="gender" value="Male">Male
+        <input type="radio" name="gender" value="Female">Female
+        <input type="radio" name="gender" value="Other">Other
+      </label>
+    </div>
+
+    <div class="form-row">
+      <textarea id="comment" placeholder="Comment (min 10 chars)"></textarea>
+    </div>
+
+    <button type="button" id="submitBtn">Submit</button>
+    <div id="contactErrors"></div>
+    <div id="contactResult"></div>
+  </form>
+</div>
+
+<script>
+
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  const first = document.getElementById('firstName').value.trim();
+  const last = document.getElementById('lastName').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const comment = document.getElementById('comment').value.trim();
+  const gender = Array.from(document.getElementsByName('gender')).find(r=>r.checked)?.value;
+
+  const errors = [];
+
+  const nameRegex = /^[A-Z][a-zA-Z]*$/;
+  if(!first) errors.push('First name is required.');
+  else if(!nameRegex.test(first)) errors.push('First name must be alphabetic and start with a capital letter.');
+  if(!last) errors.push('Last name is required.');
+  else if(!nameRegex.test(last)) errors.push('Last name must be alphabetic and start with a capital letter.');
+  if(first && last && first.toLowerCase() === last.toLowerCase()) errors.push('First and last name cannot be the same.');
+
+  const phoneRegex = /^\(\d{3}\)\s?\d{3}-\d{4}$/;
+  if(!phoneRegex.test(phone)) errors.push('Phone must be formatted as (ddd) ddd-dddd');
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRegex.test(email)) errors.push('Email must be a valid address containing "@" and "."');
+
+  if(!gender) errors.push('Please select a gender.');
+
+  if(!comment || comment.length < 10) errors.push('Comment must be at least 10 characters.');
+
+  const errDiv = document.getElementById('contactErrors');
+  const resDiv = document.getElementById('contactResult');
+  errDiv.innerHTML = ''; resDiv.innerHTML = '';
+  if(errors.length){
+    A2.showErrors(errDiv, errors);
+    return;
+  }
+
+  const html = `<strong>Submission successful</strong><br>
+    Name: ${first} ${last}<br>
+    Phone: ${phone}<br>
+    Email: ${email}<br>
+    Gender: ${gender}<br>
+    Comment: ${comment.replace(/\n/g,'<br>')}`;
+  A2.showResult(resDiv, html);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Cruises</title>
+  <link rel="stylesheet" href="mystyle.css">
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body onload="A2.startDateTime(); A2.initControls();">
+<header>
+  <div class="brand">Travel Deals</div>
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="stays.html">Stays</a>
+    <a href="flights.html">Flights</a>
+    <a href="cars.html">Cars</a>
+    <a href="cruises.html">Cruises</a>
+    <a href="contact.html">Contact Us</a>
+  </nav>
+</header>
+
+<div class="container">
+  <div class="controls">
+    <label>Current local date/time: <span id="localDateTime"></span></label>
+    <label style="margin-left:auto;">Font size:
+      <select id="fontSizeSelect"><option>16</option></select>
+    </label>
+    <label>Background:
+      <select id="bgColorSelect"><option value="#ffffff">White</option></select>
+    </label>
+  </div>
+
+  <h2>Find a Cruise (jQuery)</h2>
+
+  <form id="cruiseForm" novalidate>
+    <div class="form-row">
+      <select id="destination">
+        <option value="">Select destination</option>
+        <option>Alaska</option>
+        <option>Bahamas</option>
+        <option>Europe</option>
+        <option>Mexico</option>
+      </select>
+      <label>Departing between:
+        <input id="depFrom" type="date"> and <input id="depTo" type="date">
+      </label>
+    </div>
+
+    <div class="form-row">
+      <label>Min duration (days): <input id="minDur" type="number" min="1" value="3"></label>
+      <label>Max duration (days): <input id="maxDur" type="number" min="1" value="5"></label>
+    </div>
+
+    <div class="form-row">
+      <label>Adults: <input id="cAdults" type="number" min="0" value="1"></label>
+      <label>Children: <input id="cChildren" type="number" min="0" value="0"></label>
+      <label>Infants: <input id="cInfants" type="number" min="0" value="0"></label>
+    </div>
+
+    <button type="button" id="searchCruise">Search</button>
+    <div id="cruiseErrors"></div>
+    <div id="cruiseResult"></div>
+  </form>
+</div>
+
+<script>
+
+$(function(){
+  $('#searchCruise').on('click', function(){
+    const dest = $('#destination').val();
+    const depFrom = $('#depFrom').val();
+    const depTo = $('#depTo').val();
+    const minDur = Number($('#minDur').val()) || 0;
+    const maxDur = Number($('#maxDur').val()) || 0;
+    const adults = Number($('#cAdults').val()) || 0;
+    const children = Number($('#cChildren').val()) || 0;
+    const infants = Number($('#cInfants').val()) || 0;
+
+    const errors = [];
+
+    const allowed = ['Alaska','Bahamas','Europe','Mexico'];
+    if(!allowed.includes(dest)) errors.push('Destination must be Alaska, Bahamas, Europe, or Mexico.');
+
+    if(minDur < 3) errors.push('Minimum duration cannot be less than 3 days.');
+    if(maxDur > 10) errors.push('Maximum duration cannot be greater than 10 days.');
+    if(minDur > maxDur) errors.push('Minimum duration cannot be greater than maximum duration.');
+
+    if(!A2.inDateRange(depFrom, '2024-09-01', '2024-12-01')) errors.push('Depart-from date must be between Sep 1, 2024 and Dec 1, 2024.');
+    if(!A2.inDateRange(depTo, '2024-09-01', '2024-12-01')) errors.push('Depart-to date must be between Sep 1, 2024 and Dec 1, 2024.');
+    if(A2.parseYMD(depFrom) && A2.parseYMD(depTo) && A2.parseYMD(depTo).getTime() < A2.parseYMD(depFrom).getTime())
+      errors.push('Depart-to cannot be before depart-from.');
+
+
+    const nonInfants = adults + children;
+    const roomsNeeded = Math.ceil(nonInfants / 2) || 0;
+    if(adults > 2*roomsNeeded) errors.push('Adults exceed per-room capacity.');
+    if(children > 2*roomsNeeded) errors.push('Children exceed per-room capacity.');
+
+    $('#cruiseErrors').empty(); $('#cruiseResult').empty();
+    if(errors.length){
+      for(const e of errors){
+        $('<div>').addClass('error').text(e).appendTo('#cruiseErrors');
+      }
+      return;
+    }
+
+    const html = `<strong>Cruise search</strong><br>
+      Destination: ${dest}<br>
+      Departing between: ${depFrom} and ${depTo}<br>
+      Duration: ${minDur} - ${maxDur} days<br>
+      Guests: ${adults} adults, ${children} children, ${infants} infants<br>
+      Rooms needed (excl infants): ${roomsNeeded}`;
+    $('#cruiseResult').html(`<div class="result">${html}</div>`);
+  });
+});
+</script>
+</body>
+</html>
