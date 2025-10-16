@@ -1,5 +1,4 @@
 
-<script>
 function startDateTime(id="localDateTime"){
   const el = document.getElementById(id);
   if(!el) return;
@@ -85,4 +84,11 @@ function isAllowedCity(city){
 window.A2 = {
   startDateTime, initControls, parseYMD, inDateRange, showErrors, showResult, isAllowedCity
 };
-</script>
+
+function initPage() {
+  // initialize the clock
+  A2.startDateTime();
+
+  // initialize the font and background controls
+  A2.initControls();
+}

@@ -2,102 +2,70 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Cars</title>
+  <title>Travel Deals - Cars</title>
   <link rel="stylesheet" href="mystyle.css">
+  <script src="script.js" defer></script>
 </head>
-<body onload="A2.startDateTime(); A2.initControls();">
-<header>
-  <div class="brand">Travel Deals</div>
-  <nav class="nav">
-    <a href="index.html">Home</a>
-    <a href="stays.html">Stays</a>
-    <a href="flights.html">Flights</a>
-    <a href="cars.html">Cars</a>
-    <a href="cruises.html">Cruises</a>
-    <a href="contact.html">Contact Us</a>
-  </nav>
-</header>
+<body onload="initPage()">
 
-<div class="container">
-  <div class="controls">
-    <label>Current local date/time: <span id="localDateTime"></span></label>
-    <label style="margin-left:auto;">Font size:
-      <select id="fontSizeSelect"><option>16</option><option>18</option></select>
+  <div class="side-panel">
+    <h3>Settings</h3>
+    <label>Current local date/time:</label>
+    <div id="localDateTime"></div>
+
+    <label>Font size:
+      <select id="fontSizeSelect">
+        <option>16</option><option>18</option><option>20</option><option>22</option>
+      </select>
     </label>
+
     <label>Background:
-      <select id="bgColorSelect"><option value="#ffffff">White</option></select>
+      <select id="bgColorSelect">
+        <option value="#ffffff">White</option>
+        <option value="#f4f9ff">Light blue</option>
+        <option value="#fffaf0">Ivory</option>
+        <option value="#f7fff3">Light green</option>
+      </select>
     </label>
   </div>
 
-  <h2>Car Booking (DOM methods)</h2>
+  <div class="main-content">
+    <header>
+    <h1>Travel Deals Explorer</h1>
+    <p>Your one-stop destination for amazing travel offers!</p>
+  </header>
 
-  <form id="carForm" novalidate>
-    <div class="form-row">
-      <input id="carCity" type="text" placeholder="City (TX or CA)">
-      <select id="carType">
-        <option value="">Select car type</option>
-        <option>economy</option>
-        <option>SUV</option>
-        <option>Compact</option>
-        <option>midsize</option>
-      </select>
+  <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="stays.html">Stays</a>
+        <a href="flights.html">Flights</a>
+        <a href="cars.html">Cars</a>
+        <a href="cruises.html">Cruises</a>
+        <a href="contact.html">Contact Us</a>
+      </nav>
+
+    <div class="container">
+      <h2>Rent a Car</h2>
+      <form id="carForm" onsubmit="return validateCar()">
+        <div class="form-row">
+          <input type="text" id="carCity" placeholder="City (Texas or California)">
+          <select id="carType">
+            <option value="">Select type</option>
+            <option>Economy</option>
+            <option>SUV</option>
+            <option>Compact</option>
+            <option>Midsize</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <input type="date" id="carCheckIn">
+          <input type="date" id="carCheckOut">
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+      <div id="carResult" class="result"></div>
     </div>
-
-    <div class="form-row">
-      <label>Pick-up: <input id="carPick" type="date"></label>
-      <label>Drop-off: <input id="carDrop" type="date"></label>
-    </div>
-
-    <button type="button" id="submitCar">Submit</button>
-    <div id="carErrors"></div>
-    <div id="carResult"></div>
-  </form>
-</div>
-
-<script>
-
-document.getElementById('submitCar').addEventListener('click', function(){
-  const city = document.getElementById('carCity').value.trim();
-  const type = document.getElementById('carType').value.trim();
-  const pick = document.getElementById('carPick').value;
-  const drop = document.getElementById('carDrop').value;
-
-  const errors = [];
-
-  if(!A2.inDateRange(pick, '2024-09-01', '2024-12-01')) errors.push('Pick-up date must be between Sep 1, 2024 and Dec 1, 2024.');
-  if(!A2.inDateRange(drop, '2024-09-01', '2024-12-01')) errors.push('Drop-off date must be between Sep 1, 2024 and Dec 1, 2024.');
-  const d1 = A2.parseYMD(pick), d2 = A2.parseYMD(drop);
-  if(d1 && d2 && d2.getTime() < d1.getTime()) errors.push('Drop-off cannot be before pick-up.');
-
-  if(!A2.isAllowedCity(city)) errors.push('City must be a city in Texas or California.');
-
-  const allowedTypes = ['economy','SUV','Compact','midsize'];
-  if(!allowedTypes.includes(type)) errors.push('Car type must be economy, SUV, Compact or midsize.');
-
-  const errorsDiv = document.getElementById('carErrors');
-  const resultDiv = document.getElementById('carResult');
-  errorsDiv.innerHTML=''; resultDiv.innerHTML='';
-  if(errors.length){
-
-    errors.forEach(e=>{
-      const d = document.createElement('div');
-      d.className = 'error';
-      d.textContent = e;
-      errorsDiv.appendChild(d);
-    });
-    return;
-  }
-
-
-  const container = document.createElement('div');
-  container.className = 'result';
-  container.innerHTML = `<strong>Car booking</strong><br>
-    City: ${city}<br>
-    Car type: ${type}<br>
-    Pick-up: ${pick}<br>
-    Drop-off: ${drop}`;
-  resultDiv.appendChild(container);
-});
-</script>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>

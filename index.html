@@ -6,24 +6,19 @@
   <link rel="stylesheet" href="mystyle.css">
 </head>
 <body onload="A2.startDateTime(); A2.initControls();">
-<header>
-  <div class="brand">Travel Deals</div>
-  <nav class="nav">
-    <a href="index.html">Home</a>
-    <a href="stays.html">Stays</a>
-    <a href="flights.html">Flights</a>
-    <a href="cars.html">Cars</a>
-    <a href="cruises.html">Cruises</a>
-    <a href="contact.html">Contact Us</a>
-  </nav>
-</header>
 
-<div class="container">
-  <div class="controls">
-    <label>Current local date/time: <span id="localDateTime"></span></label>
-    <label style="margin-left:auto;">Font size:
-      <select id="fontSizeSelect"><option>16</option><option>18</option><option>20</option><option>22</option></select>
+  <!-- LEFT PANEL -->
+  <div class="side-panel">
+    <h3>Settings</h3>
+    <label>Current local date/time:</label>
+    <div id="localDateTime"></div>
+
+    <label>Font size:
+      <select id="fontSizeSelect">
+        <option>16</option><option>18</option><option>20</option><option>22</option>
+      </select>
     </label>
+
     <label>Background:
       <select id="bgColorSelect">
         <option value="#ffffff">White</option>
@@ -34,15 +29,33 @@
     </label>
   </div>
 
-  <h2>Welcome to Travel Deals</h2>
-  <p class="small">Use the navigation bar to explore flights, stays, cars, cruises, or contact us.</p>
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <header>
+    <h1>Travel Deals Explorer</h1>
+    <p>Your one-stop destination for amazing travel offers!</p>
+  </header>
 
-  <div class="footer">CS 6314 - Assignment #2 — skeleton site. Make sure to test validations and date ranges.</div>
-</div>
+  <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="stays.html">Stays</a>
+        <a href="flights.html">Flights</a>
+        <a href="cars.html">Cars</a>
+        <a href="cruises.html">Cruises</a>
+        <a href="contact.html">Contact Us</a>
+      </nav>
+
+
+    <div class="container">
+      <h2>Welcome to Travel Deals</h2>
+      <p class="small">Use the navigation bar to explore flights, stays, cars, cruises, or contact us.</p>
+
+      <div class="footer">CS 6314 - Assignment #2 — skeleton site. Make sure to test validations and date ranges.</div>
+    </div>
+  </div>
 
 <script>
-</script>
-<script>
+/* your A2 script calls */
 </script>
 </body>
 </html>
