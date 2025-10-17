@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <title>Travel Deals - Stays</title>
   <link rel="stylesheet" href="mystyle.css">
-  <script src="script.js" defer></script>
+  <script src="main.js" defer></script>
+  <script src="stays.js" defer></script>
+
 </head>
 <body onload="initPage()">
 
@@ -46,12 +48,9 @@
         <a href="contact.html">Contact Us</a>
       </nav>
 
-      
-    
-
     <div class="container">
       <h2>Find a Stay</h2>
-      <form id="stayForm" onsubmit="return validateStay()">
+      <form id="stayForm">
         <div class="form-row">
           <input type="text" id="stayCity" placeholder="City (Texas or California)">
           <input type="date" id="checkIn">

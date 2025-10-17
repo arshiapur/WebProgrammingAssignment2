@@ -4,9 +4,10 @@
   <meta charset="utf-8">
   <title>Travel Deals - Flights</title>
   <link rel="stylesheet" href="mystyle.css">
-  <script src="script.js" defer></script>
+  <script src="main.js" defer></script>
+  <script src="flights.js" defer></script>
 </head>
-<body onload="initPage()">
+<body>
 
   <div class="side-panel">
     <h3>Settings</h3>
@@ -31,46 +32,52 @@
 
   <div class="main-content">
     <header>
-    <h1>Travel Deals Explorer</h1>
-    <p>Your one-stop destination for amazing travel offers!</p>
-  </header>
+      <h1>Travel Deals Explorer</h1>
+      <p>Your one-stop destination for amazing travel offers!</p>
+    </header>
 
-  <nav class="nav">
-        <a href="index.html">Home</a>
-        <a href="stays.html">Stays</a>
-        <a href="flights.html">Flights</a>
-        <a href="cars.html">Cars</a>
-        <a href="cruises.html">Cruises</a>
-        <a href="contact.html">Contact Us</a>
-      </nav>
-
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="stays.html">Stays</a>
+      <a href="flights.html">Flights</a>
+      <a href="cars.html">Cars</a>
+      <a href="cruises.html">Cruises</a>
+      <a href="contact.html">Contact Us</a>
+    </nav>
 
     <div class="container">
       <h2>Book a Flight</h2>
-      <form id="flightForm" onsubmit="return validateFlight()">
+      <form id="flightForm">
         <div class="form-row">
           <label><input type="radio" name="tripType" value="oneway" checked> One-way</label>
           <label><input type="radio" name="tripType" value="round"> Round-trip</label>
         </div>
+
         <div class="form-row">
           <input type="text" id="origin" placeholder="Origin City">
           <input type="text" id="destination" placeholder="Destination City">
         </div>
+
         <div class="form-row">
           <input type="date" id="departDate">
           <input type="date" id="returnDate" placeholder="Return date (for round trip)">
         </div>
+        
+
         <div class="form-row">
-          <span class="passenger-icon" onclick="togglePassengers()">👤 Passengers</span>
+          <span id="passengerIcon" class="passenger-icon">👤 Passengers</span>
         </div>
-        <div id="passengerForm" class="hidden">
-          <input type="number" id="adultCount" placeholder="Adults">
-          <input type="number" id="childCount" placeholder="Children">
-          <input type="number" id="infantCount" placeholder="Infants">
+
+        <div id="passengerForm" class="hidden" style="display:none;">
+          <input type="number" id="adults" placeholder="Adults">
+          <input type="number" id="children" placeholder="Children">
+          <input type="number" id="infants" placeholder="Infants">
         </div>
-        <button type="submit">Search</button>
+
+        <button type="submit" id="flightSearchBtn">Search</button>
       </form>
-      <div id="flightResult" class="result"></div>
+
+      <div id="messageBox" class="result"></div>
     </div>
   </div>
 </body>
