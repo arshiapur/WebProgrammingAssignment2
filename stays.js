@@ -22,7 +22,7 @@ function validateStay(e) {
   }
 
   if (!city) errors.push("Please enter a city.");
-  else if (!isValidCity(city)) errors.push("City must be in Texas or California.");
+  else if (!isValidCity(city)) errors.push("City must be in Texas or California. (e.g., austin/san jose)");
 
   if (adults <= 0) errors.push("At least one adult is required.");
   if (children < 0 || infants < 0) errors.push("Number of children or infants cannot be negative.");
