@@ -10,12 +10,12 @@ function validateStay(e) {
 
   const errors = [];
 
-  const rangeStart = "2024-09-01";
-  const rangeEnd = "2024-12-01";
+  const VALID_START_DATE = "2024-09-01";
+  const VALID_END_DATE = "2024-12-01";
 
   if (!checkIn || !checkOut) {
     errors.push("Please select both check-in and check-out dates.");
-  } else if (!inDateRange(checkIn, rangeStart, rangeEnd) || !inDateRange(checkOut, rangeStart, rangeEnd)) {
+  } else if (!inDateRange(checkIn, VALID_START_DATE, VALID_END_DATE) || !inDateRange(checkOut, VALID_START_DATE, VALID_END_DATE)) {
     errors.push("Dates must be between September 1, 2024 and December 1, 2024.");
   } else if (parseYMD(checkOut) <= parseYMD(checkIn)) {
     errors.push("Check-out date must be after check-in date.");

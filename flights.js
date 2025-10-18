@@ -52,11 +52,11 @@ function validateFlight(e) {
   if (origin && destination && origin === destination) errors.push("Origin and destination cannot be the same.");
 
   if (!departDate) errors.push("Please select a departure date.");
-  else if (!inDateRange(departDate, RANGE_START, RANGE_END)) errors.push("Departure date must be between Sep 1, 2024 and Dec 1, 2024.");
+  else if (!inDateRange(departDate, VALID_START_DATE, VALID_END_DATE)) errors.push("Departure date must be between Sep 1, 2024 and Dec 1, 2024.");
 
   if (tripType === "round") {
     if (!returnDate) errors.push("Please select a return date for a round trip.");
-    else if (!inDateRange(returnDate, RANGE_START, RANGE_END)) errors.push("Return date must be between Sep 1, 2024 and Dec 1, 2024.");
+    else if (!inDateRange(returnDate, VALID_START_DATE, VALID_END_DATE)) errors.push("Return date must be between Sep 1, 2024 and Dec 1, 2024.");
     else if (new Date(returnDate) <= new Date(departDate)) errors.push("Return date must be after departure date.");
   }
 
